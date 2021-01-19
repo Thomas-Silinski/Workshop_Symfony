@@ -1,0 +1,58 @@
+# Learn more about services, parameters and containers at
+# https://symfony.com/doc/current/service_container.html
+parameters:
+    #parameter_name: value
+
+services:
+    # makes classes in src/AppBundle available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    app.form.registration:
+        class: AppBundle\Form\RegistrationFormType
+        tags:
+            - { name: form.type, alias: app_user_registration }
+    AppBundle\:
+        resource: '../../src/AppBundle/*'
+        # you can exclude directories or files
+        # but if a service is unused, it's removed anyway
+        exclude: '../../src/AppBundle/{Entity,Repository,Tests}'
+
+    # controllers are imported separately to make sure they're public
+    # and have a tag that allows actions to type-hint services
+    AppBundle\Controller\:
+        resource: '../../src/AppBundle/Controller'
+        public: true
+        tags: ['controller.service_arguments']
+
+    my_api.manager.user:
+        class: AppBundle\Manager\UserManager
+        arguments: ['@doctrine.orm.entity_manager', '@fos_user.user_manager', '@request_stack', AppBundle\Entity\User]
+    my_api.registration.form.factory:
+        class: AppBundle\Form\Factory\FormFactory
+        arguments: [ '@form.factory', 'my_api_registration', 'AppBundle\Form\RegistrationFormType']
+
+    my_api.manager.posts:
+        class: AppBundle\Manager\PostManager
+        arguments:  ['@doctrine.orm.entity_manager', '@request_stack', 'AppBundle\Entity\Posts']
+    my_api.posts.form.factory:
+        class: AppBundle\Form\Factory\FormFactory
+        arguments: [ '@form.factory', 'my_api_posts', 'AppBundle\Form\PostsFormType']
+
+    my_api.manager.comment:
+        class: AppBundle\Manager\CommentManager
+        arguments:  ['@doctrine.orm.entity_manager', '@request_stack', 'AppBundle\Entity\Comment']
+    my_api.comment.form.factory:
+        class: AppBundle\Form\Factory\FormFactory
+        arguments: [ '@form.factory', 'my_api_comment', 'AppBundle\Form\CommentFormType']
+
+    my_api.manager.like:
+        class: AppBundle\Manager\LikeManager
+        arguments:  ['@doctrine.orm.entity_manager', '@request_stack', 'AppBundle\Entity\Likes']
+    my_api.like.form.factory:
+        class: AppBundle\Form\Factory\FormFactory
+        arguments: [ '@form.factory', 'my_api_like', 'AppBundle\Form\LikeFormType']
+
+
+    # add more services, or override services that need manual wiring
+    # AppBundle\Service\ExampleService:
+    #     arguments:
+    #         $someArgument: 'some_value'

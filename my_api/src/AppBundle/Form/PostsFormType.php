@@ -1,0 +1,30 @@
+<?php
+
+namespace AppBundle\Form;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+
+class PostsFormType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('content');
+        $builder->add('user');
+    }
+
+    public function getBlockPrefix()
+    {
+        return 'my_api_posts';
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+           'data_class' => 'AppBundle\Entity\Posts',
+           'csrf_protection' => false,
+       ));
+    }
+}

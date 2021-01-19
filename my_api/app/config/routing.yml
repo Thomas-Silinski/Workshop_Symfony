@@ -1,0 +1,17 @@
+app:
+    resource: '@AppBundle/Controller/'
+    type: annotation
+
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+
+login_check:
+    path:   /login_check
+
+# user:
+#     type:   rest
+#     resource:  AppBundle\Controller\DefaultController.php
+
+# posts:
+#     type:   rest
+#     resource:  AppBundle\Controller\PostsController.php
